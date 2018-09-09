@@ -6,14 +6,14 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - UPLOAD_FOLDER=/var/uploads
-      - LOG_FOLDER=/var/log/CTFd
+      - LOG_FOLDER=/var/opt/CTFd/log
+      - UPLOAD_FOLDER=/var/opt/CTFd/upload
       - DATABASE_URL=mysql+pymysql://root:ctfd@db/ctfd
       - REDIS_URL=redis://cache:6379
       - WORKERS=4
     volumes:
-      - .data/CTFd/logs:/var/log/CTFd
-      - .data/CTFd/uploads:/var/uploads
+      - /var/opt/CTFd/log:/var/opt/CTFd/log
+      - /var/opt/CTFd/upload:/var/opt/CTFd/upload
       - .:/opt/CTFd:ro
     depends_on:
       - db
@@ -28,15 +28,15 @@ services:
       - MYSQL_USER=ctfd
       - MYSQL_PASSWORD=ctfd
     volumes:
-      - .data/mysql:/var/lib/mysql
+      - /var/opt/CTFd/mysql:/var/lib/mysql
     networks:
       internal:
-    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0]
+    command: [ mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0 ]
   cache:
     image: redis:4
     restart: always
     volumes:
-      - .data/redis:/data
+      - /var/opt/CTFd/redis:/data/CTFd
     networks:
       internal:
 networks:
