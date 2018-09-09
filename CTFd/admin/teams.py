@@ -98,7 +98,7 @@ def admin_create_team():
 
     team.admin = admin_user
     team.verified = verified
-    team.hidden = hidden
+    team.banned = hidden
 
     db.session.add(team)
     db.session.commit()
