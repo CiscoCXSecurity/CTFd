@@ -1,5 +1,4 @@
 version: '2'
-
 services:
   ctfd:
     build: .
@@ -21,7 +20,6 @@ services:
     networks:
         default:
         internal:
-
   db:
     image: mariadb:10.2
     restart: always
@@ -32,19 +30,15 @@ services:
     volumes:
       - .data/mysql:/var/lib/mysql
     networks:
-        internal:
-    # This command is required to set important mariadb defaults
+      internal:
     command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0]
-
   cache:
     image: redis:4
     restart: always
     volumes:
-    - .data/redis:/data
+      - .data/redis:/data
     networks:
-        internal:
-
+      internal:
 networks:
-    default:
-    internal:
-        internal: true
+  default:
+  internal:
