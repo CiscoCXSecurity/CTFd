@@ -197,7 +197,7 @@ def solves_per_chal():
 
 
 @challenges.route('/solves')
-@authed_only
+@viewable_without_authentication(status_code=403)
 def solves_private():
     solves = None
     awards = None
@@ -213,7 +213,7 @@ def solves_private():
         else:
             return jsonify({'solves': []})
     else:
-        return redirect(url_for('auth.login', next='solves'))
+        return jsonify({'solves': []})
 
     db.session.close()
     response = {'solves': []}
