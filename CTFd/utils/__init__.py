@@ -594,7 +594,7 @@ def get_smtp(host, port, username=None, password=None, TLS=None, SSL=None, auth=
         smtp.starttls()
 
     if auth:
-        smtp.login(username, password)
+        smtp.login(str(username), str(password))
     return smtp
 
 
