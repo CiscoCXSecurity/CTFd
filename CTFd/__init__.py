@@ -3,6 +3,7 @@ import os
 
 from distutils.version import StrictVersion
 from flask import Flask
+from werkzeug.contrib.fixers import ProxyFix
 from jinja2 import FileSystemLoader
 from jinja2.sandbox import SandboxedEnvironment
 from sqlalchemy.engine.url import make_url
@@ -84,6 +85,7 @@ def run_upgrade():
 
 def create_app(config='CTFd.config.Config'):
     app = CTFdFlask(__name__)
+    app.wsgi_app = ProxyFix(app.wsgi_app)
     with app.app_context():
         app.config.from_object(config)
 
