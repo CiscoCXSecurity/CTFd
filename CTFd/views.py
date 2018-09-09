@@ -7,8 +7,16 @@ from jinja2.exceptions import TemplateNotFound
 from passlib.hash import bcrypt_sha256
 
 from CTFd.models import db, Teams, Solves, Awards, Files, Pages
-from CTFd.utils import cache, markdown
+
 from CTFd import utils
+from CTFd.utils.decorators import (
+    authed_only,
+    admins_only,
+    during_ctf_time_only,
+    require_verified_emails,
+    viewable_without_authentication
+)
+from CTFd.utils import cache, markdown
 
 views = Blueprint('views', __name__)
 
@@ -171,13 +179,31 @@ def private_team():
 
 
 @views.route('/team/<int:teamid>', methods=['GET', 'POST'])
+@during_ctf_time_only
+@require_verified_emails
+@viewable_without_authentication
 def team(teamid):
     if utils.get_config('workshop_mode'):
         abort(404)
 
     if utils.get_config('view_scoreboard_if_utils.authed') and not utils.authed():
         return redirect(url_for('auth.login', next=request.path))
+    infos = []
     errors = []
+
+    if utils.ctf_paused():
+        infos.append('{} is paused'.format(utils.ctf_name()))
+
+    if not utils.ctftime():
+        # It is not CTF time
+        if utils.view_after_ctf():  # But we are allowed to view after the CTF ends
+            pass
+        else:  # We are NOT allowed to view after the CTF ends
+            if utils.get_config('start') and not utils.ctf_started():
+                errors.append('{} has not started yet'.format(utils.ctf_name()))
+            if (utils.get_config('end') and utils.ctf_ended()) and not utils.view_after_ctf():
+                errors.append('{} has ended'.format(utils.ctf_name()))
+    
     freeze = utils.get_config('freeze')
     user = Teams.query.filter_by(id=teamid).first_or_404()
     solves = Solves.query.filter_by(teamid=teamid)
@@ -199,12 +225,16 @@ def team(teamid):
 
     if utils.hide_scores() and teamid != session.get('id'):
         errors.append('Scores are currently hidden')
+    else:
+        # banned is a synonym for hidden :/
+        if not utils.is_admin() and (user.admin or user.banned):
+            errors.append('Scores are currently hidden')
 
     if errors:
-        return render_template('team.html', team=user, errors=errors)
+        return render_template('team.html', team=user, infos=infos, errors=errors)
 
     if request.method == 'GET':
-        return render_template('team.html', solves=solves, awards=awards, team=user, score=score, place=place, score_frozen=utils.is_scoreboard_frozen())
+        return render_template('team.html', solves=solves, awards=awards, team=user, score=score, place=place, score_frozen=utils.is_scoreboard_frozen(), infos=infos)
     elif request.method == 'POST':
         json = {'solves': []}
         for x in solves:

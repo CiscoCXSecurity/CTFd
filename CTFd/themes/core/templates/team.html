@@ -10,18 +10,24 @@
 	</div>
 </div>
 <div class="container">
-	{% if errors %}
-	<div id='errors' class="row">
-	{% for error in errors %}
-		<h1>{{ error }}</h1>
+	{% if infos %}
+	<div id='errors'>
+	{% for info in infos %}
+		<div class="text-center"><h3 class="spinner-error">{{ info }}</h3></div>
 	{% endfor %}
 	</div>
-	{% else %}
-
-	{% if score_frozen %}
-	<div class="row">
-		<h1 class="text-center">Scoreboard has been frozen.</h1>
+	{% endif %}
+	{% if errors %}
+	<div id='errors'>
+	{% for error in errors %}
+		<div class="text-center"><h3 class="spinner-error">{{ error }}</h3></div>
+	{% endfor %}
 	</div>
+	{% endif %}
+
+	{% if admin or not errors %}
+	{% if score_frozen %}
+	<div class="text-center"><h3 class="spinner-error">Scoreboard has been frozen</h3></div>
 	{% endif %}
 
 	<div class="team-info">

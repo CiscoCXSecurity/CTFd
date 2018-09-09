@@ -7,22 +7,16 @@
 	</div>
 </div>
 <div class="container">
-	{% if errors %}
-	<div id='errors' class="row">
-		<div class="col-md-12">
+	<div id='errors'>
 		{% for error in errors %}
-			<h1 class="text-center">{{ error }}</h1>
+			<div class="text-center"><h3 class="spinner-error">{{ error }}</h3></div>
 		{% endfor %}
 		</div>
 	</div>
-	{% else %}
 
+	{% if admin or not errors %}
 	{% if score_frozen %}
-	<div class="row">
-		<div class="col-md-12">
-			<h1 class="text-center">Scoreboard has been frozen.</h1>
-		</div>
-	</div>
+	<div class="text-center"><h3 class="spinner-error">Scoreboard has been frozen</h3></div>
 	{% endif %}
 
 	<div id="score-graph" class="row">
