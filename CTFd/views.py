@@ -181,7 +181,7 @@ def private_team():
 @views.route('/team/<int:teamid>', methods=['GET', 'POST'])
 @during_ctf_time_only
 @require_verified_emails
-@viewable_without_authentication
+@viewable_without_authentication()
 def team(teamid):
     if utils.get_config('workshop_mode'):
         abort(404)
