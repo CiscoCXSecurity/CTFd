@@ -34,4 +34,4 @@ fi
 
 # Start CTFd
 echo "Starting CTFd"
-gunicorn "CTFd:create_app()" --bind "0.0.0.0:8000" --workers $WORKERS --worker-class "gevent" --access-logfile "${LOG_FOLDER:-/opt/CTFd/CTFd/logs}/access.log" --error-logfile "${LOG_FOLDER:-/opt/CTFd/CTFd/logs}/error.log"
+gunicorn "CTFd:create_app()" --bind "0.0.0.0:8000" --workers $WORKERS --worker-class "gevent" --access-logfile "${LOG_FOLDER:-/var/opt/CTFd/log}/access.log" --error-logfile "${LOG_FOLDER:-/var/opt/CTFd/log}/error.log"
