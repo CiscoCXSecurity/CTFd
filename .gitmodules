@@ -1,6 +1,6 @@
 [submodule "CTFd/3rd-party/CTFd-Discovery"]
 	path = CTFd/3rd-party/CTFd-Discovery
-	url = https://github.com/timb-machine/CTFd-Discovery
+	url = https://github.com/portcullislabs/CTFd-Discovery
 [submodule "CTFd/3rd-party/CTFd-Docker"]
 	path = CTFd/3rd-party/CTFd-Docker
-	url = https://github.com/timb-machine/CTFd-Docker
+	url = https://github.com/portcullislabs/CTFd-Docker
