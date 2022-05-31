@@ -1,5 +1,5 @@
 FROM python:2.7-alpine
-RUN apk update && apk add python python-dev libffi-dev gcc make musl-dev py-pip mysql-client
+RUN apk update && apk add python python-dev libffi-dev gcc g++ make musl-dev py-pip mysql-client
 RUN mkdir -p /opt/CTFd
 COPY . /opt/CTFd
 VOLUME [ "/opt/CTFd" ]
